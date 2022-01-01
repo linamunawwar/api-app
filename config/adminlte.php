@@ -382,20 +382,7 @@ return [
         [
             'text'    => 'USER',
             'icon'    => 'fa fa-user',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
+            'url'     => '/user' ,
         ],
         // ['header' => 'labels'],
         // [
