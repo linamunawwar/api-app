@@ -269,8 +269,8 @@ return [
             'icon'    => 'fab fa-twitter',
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url'  => '#',
+                    'text' => 'Twitter Search',
+                    'url'  => 'twitter',
                 ],
                 [
                     'text'    => 'level_one',

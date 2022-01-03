@@ -26,6 +26,18 @@ Route::post('/user/edit/{id}', [App\Http\Controllers\UserController::class, 'upd
 Route::get('/user/edit_pass/{id}', [App\Http\Controllers\UserController::class, 'editPass'])->name('user.edit_pass');
 Route::post('/user/edit_pass/{id}', [App\Http\Controllers\UserController::class, 'updatePass'])->name('user.update_pass');
 Route::get('/user/delete/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('user.delete');
+
+
+/* Social Media */
+Route::get('/twitter', [App\Http\Controllers\TwitterController::class, 'index'])->name('twitter');
+
+// Authorization Twitter
+Route::get('/media/twitter', [App\Http\Controllers\TwitterController::class, 'twitter_connect'])->name('media.twitter');
+Route::get('/twitter/callback', [App\Http\Controllers\TwitterController::class, 'twitter_callback'])->name('media.callback');
+
+Route::post('/twitter/search', [App\Http\Controllers\TwitterController::class, 'fetch_twitter'])->name('twitter.search');
+
+
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

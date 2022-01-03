@@ -64,6 +64,13 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="social-auth-links text-center mb-3">
+                            <p>- OR -</p>
+                            <a href="{{ route('media.twitter') }}" class="btn btn-block btn-info" style="color: #FFF;">
+                                <i class="fab fa-facebook mr-2"></i> Sign in using Twitter
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
