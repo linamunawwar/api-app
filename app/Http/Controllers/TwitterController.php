@@ -53,8 +53,6 @@ class TwitterController extends Controller
 
     
 
-
-
     public function index()
     {
         return view('twitter.index');

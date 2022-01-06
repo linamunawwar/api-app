@@ -41,3 +41,7 @@ Route::post('/twitter/search', [App\Http\Controllers\TwitterController::class, '
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//instagram
+Route::get('/get-photos', [App\Http\Controllers\InstagramController::class, 'getMedia']);
+Route::get('/ig-redirect-uri', [App\Http\Controllers\InstagramController::class, 'igRedirectUri']); //this is the url earlier we added in app setup in facebook developer console
