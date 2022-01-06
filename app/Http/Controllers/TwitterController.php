@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Models\SocialAuth;
+use Session;
 
 class TwitterController extends Controller
 {
@@ -62,7 +63,8 @@ class TwitterController extends Controller
 
     public function fetch_twitter(Request $request)
     {
-        $string = $request->input('tweetSearch') ?? "Dev Api";
+        $string = $request->input('tweetField') ?? "Dev Api";
+
 
         $twitter = SocialAuth::query()->first();
         $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
@@ -70,14 +72,10 @@ class TwitterController extends Controller
         $push->ssl_verifypeer = true;
         $push->get("search/tweets", [
             "q" => "$string", 
-            "count" => "6"
+            "count" => "100"
         ]);
 
         $response = response()->json($push->getLastBody());
-
-        // foreach ($response as $key => $value) {
-        //     dd($value);
-        // }
 
         return $response;
     }

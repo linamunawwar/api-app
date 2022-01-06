@@ -4,7 +4,7 @@
 @section('title', 'User')
 
 @section('content_header')
-    <h1>Searching Tweet</h1>
+    <h1>Searching Tweet</h1> {{ Session::get('sessionTweetField') }}
 @stop
 
 @section('content')
@@ -19,35 +19,31 @@
         </div>
     @endif
     <div style="margin-bottom: 20px;">
-        <form action="{{ route('twitter.search') }}" method="post">
-            @csrf
+        {{-- <form action="{{ route('twitter.search') }}" method="post"> --}}
+            {{-- @csrf --}}
             <div class="input-group input-group">
-                <input type="text" name="tweetSearch" class="form-control" placeholder="Search Tweet">
+                <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
+                <input type="text" id="tweetField" name="tweetField" class="form-control" placeholder="Search Tweet">
                 <span class="input-group-append">
-                    <button type="submit" class="btn btn-info btn-flat">Search</button>
+                    <button type="button" class="btn btn-info btn-flat-right tweetSearch"><i><span class="fa fa-search"> </span></i> <b>Search</b> </button>
                 </span>
             </div>
-        </form>
+        {{-- </form> --}}
     </div>
 
     <table id="tweetSearch" class="table table-striped table-bordered text-center" style="width: 100%">
         <thead>
             <tr>
-                <th>Text Tweet</th>
-                <th>Nama User</th>
-                <th>Tanggal Dibuat</th>
-                <th>Action</th>
+                <th> No </th>
+                <th> Text Tweet </th>
+                <th> Nama User </th>
+                <th> Asal Negara </th>
+                <th> Tanggal Dibuat </th>
+                <th> Action </th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <a href="#" class="btn btn-block btn-info">Lebih Lanjut</a>
-                </td>
-            </tr>
+        <tbody class="data">
+            
         </tbody>
     </table>
 @stop
@@ -64,7 +60,56 @@
 
     <script> 
         $(function () {
-            $("#tweetSearch").DataTable();
+            function newDate(dateObject) {
+                var d = new Date(dateObject);
+                var day = String(d.getDate()).padStart(2, '0');
+                var month = String(d.getMonth() + 1).padStart(2, '0');
+                var year = d.getFullYear();
+                
+                var date = day + "  " + month + "  " + year;
+            
+                return date;
+            };            
+
+            $(document).on("click", "button.tweetSearch", function(e){
+                console.log("Masuk")
+                var query = $('#tweetField').val();
+                var _token = $('#_token').val();
+
+                $.ajax({
+                    type: "post",
+                    url: '{{ url('twitter/search') }}',
+                    data: {
+                        'tweetField' : query,
+                        '_token': _token
+                    },
+                    success: function(response){
+
+                        console.log(response['statuses'])
+
+                        var jumlahData = 1;
+                        $.each(response['statuses'],function(i,val){
+                            jumlahData++;
+                            var table="<tr  class='data_"+jumlahData+"'>";
+                                table+="<td>"+jumlahData+"</td>";
+                                table+="<td>"+response['statuses'][i]['text']+"<input type='hidden' name='text[]' value='"+response['statuses'][i]['text']+"' id='text_"+jumlahData+"'></td>";
+                                table+="<td>"+response['statuses'][i]['user']['name']+"<input type='hidden' name='userName[]' value='"+response['statuses'][i]['user']['name']+"' id='userName_"+jumlahData+"'></td>";
+                                table+="<td>"+response['statuses'][i]['user']['location']+"<input type='hidden' name='userLocation[]' value='"+response['statuses'][i]['user']['location']+"' id='userLocation_"+jumlahData+"'></td>";
+                                table+="<td>"+ newDate(response['statuses'][i]['created_at'])+"<input type='hidden' name='date[]' value='"+response['statuses'][i]['created_at']+"' id='date_"+jumlahData+"'></td>";
+                                table+="<td>";
+                                table+="<a class='btn btn-block btn-info' idsub='"+jumlahData+"'>Telusuri</a>";
+                                table+="</td>";
+                                table+="</tr>";
+                                $('#tweetSearch tbody.data').append(table);
+                        });
+
+                        $('#tweetSearch').DataTable();
+                        
+                    }
+                })               
+            });
+
+            
         });
     </script>
 @endpush

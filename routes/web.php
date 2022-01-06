@@ -36,6 +36,7 @@ Route::get('/media/twitter', [App\Http\Controllers\TwitterController::class, 'tw
 Route::get('/twitter/callback', [App\Http\Controllers\TwitterController::class, 'twitter_callback'])->name('media.callback');
 
 Route::post('/twitter/search', [App\Http\Controllers\TwitterController::class, 'fetch_twitter'])->name('twitter.search');
+Route::get('/twitter/search', [App\Http\Controllers\TwitterController::class, 'fetch_twitter'])->name('twitter.search');
 
 
 Auth::routes();
