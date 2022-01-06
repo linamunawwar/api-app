@@ -60,16 +60,23 @@ class TwitterController extends Controller
 
     public function fetch_twitter(Request $request)
     {
-        $string = $request->input('query') ?? "Dev Api";
+        $string = $request->input('tweetSearch') ?? "Dev Api";
 
         $twitter = SocialAuth::query()->first();
         $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
         $push->setTimeouts(10, 15);
         $push->ssl_verifypeer = true;
-        $push->get("https://api.twitter.com/2/tweets/search/all", ["q" => "$string"]);
+        $push->get("search/tweets", [
+            "q" => "$string", 
+            "count" => "6"
+        ]);
 
-        dd($push);
+        $response = response()->json($push->getLastBody());
 
-        return response()->json($push->getLashBody());
+        // foreach ($response as $key => $value) {
+        //     dd($value);
+        // }
+
+        return $response;
     }
 }
