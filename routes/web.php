@@ -42,3 +42,13 @@ Route::get('/twitter/search', [App\Http\Controllers\TwitterController::class, 'f
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//instagram
+Route::get('instagram',[App\Http\Controllers\InstagramController::class, 'getUserInfo'])->name('instagram.info');
+//instagram Auth
+Route::get('login/instagram',[App\Http\Controllers\InstagramController::class, 'redirectToInstagramProvider'])->name('instagram.login');
+
+Route::get('login/instagram/callback', [App\Http\Controllers\InstagramController::class, 'instagramProviderCallback'])->name('instagram.login.callback');
+
+Route::get('/get-photos', [App\Http\Controllers\InstagramController::class, 'getMedia']);
+Route::get('/ig-redirect-uri', [App\Http\Controllers\InstagramController::class, 'igRedirectUri']); //this is the url earlier we added in app setup in facebook developer console

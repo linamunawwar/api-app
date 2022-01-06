@@ -68,7 +68,11 @@
                         <div class="social-auth-links text-center mb-3">
                             <p>- OR -</p>
                             <a href="{{ route('media.twitter') }}" class="btn btn-block btn-info" style="color: #FFF;">
-                                <i class="fab fa-facebook mr-2"></i> Sign in using Twitter
+                                <i class="fab fa-twitter mr-2"></i> Sign in using Twitter
+                            </a>
+
+                            <a href="{{ route('instagram.login') }}" class="btn btn-block" style="color: #FFF; background-color: #bc2a8d;">
+                                <i class="fab fa-instagram mr-2"></i> Sign in using Instagram
                             </a>
                         </div>
                     </form>
