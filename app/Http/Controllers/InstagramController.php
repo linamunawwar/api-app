@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\InstagramAuth;
+use GuzzleHttp\Client;
 
 class InstagramController extends Controller
 {
@@ -14,6 +15,10 @@ class InstagramController extends Controller
     public $authData;
 
     public $auth_table = 'instagram_auths';
+
+    private $client_id = "324650489667076";
+    private $client_secret = "e6b85401ce263228cd69145ba40f6bad";
+    private $redirect_uri = 'https://google.com/';
 
     public function __construct(){
 
@@ -50,7 +55,7 @@ class InstagramController extends Controller
         curl_close ($ch);
 
         $ig_auth_data = json_decode($ig_auth_data, true);
-        // dd($ig_auth_data);
+        dd($ig_auth_data);
 
         if (!isset($ig_auth_data['error_message'])) {
 
@@ -171,13 +176,105 @@ class InstagramController extends Controller
         //use this if want json response
         //return response()->json($igPhotos);
 
-        return $igPhotos;
+        return $ig_photos;
 
     }
 
-    public function igRedirectUri(){
-        //write your code here to check the response from oauth redirect uri which you setup in facebook developer console
-        dd('berhasil');
+    public function redirectToInstagramProvider()
+    {
+        // $appId = config('services.instagram.client_id');
+        // $redirectUri = urlencode(config('services.instagram.redirect'));
+        return redirect()->to("https://api.instagram.com/oauth/authorize?app_id={$this->client_id}&redirect_uri={$this->redirect_uri}&scope=user_profile,user_media&response_type=code");
     }
 
+    public function instagramProviderCallback(Request $request)
+    {
+        $code = $request->code;
+        if (empty($code)) return redirect()->route('home')->with('error', 'Failed to login with Instagram.');
+
+        $client = new Client();
+
+        // Get access token
+        $response = $client->request('POST', 'https://api.instagram.com/oauth/access_token', [
+            'form_params' => [
+                'app_id' => $this->client_id,
+                'app_secret' => $this->client_secret,
+                'grant_type' => 'authorization_code',
+                'redirect_uri' => $this->redirect_uri,
+                'code' => $code,
+            ]
+        ]);
+
+        if ($response->getStatusCode() != 200) {
+            return redirect()->route('home')->with('error', 'Unauthorized login to Instagram.');
+        }
+
+        $content = $response->getBody()->getContents();
+        $content = json_decode($content);
+
+        $this->authData['access_token'] = $content->access_token;
+        $this->authData['user_id'] = $content->user_id;
+        $find_user = InstagramAuth::where('user_id',$this->authData['user_id'])->first();
+        if($find_user){
+            InstagramAuth::where('user_id',$this->authData['user_id'])->update([
+                'access_token' => $this->authData['access_token'],
+                'valid_till'=> time(),
+                'expires_in'=>3600
+            ]);
+        }else{
+            $ig_auth = new InstagramAuth();
+            $ig_auth->access_token = $this->authData['access_token'];
+            $ig_auth->user_id = $this->authData['user_id'];
+            $ig_auth->valid_till = time();
+            $ig_auth->expires_in = 3600;
+            $ig_auth->save();
+        }
+
+        // Get user info
+        $response = $client->request('GET', "https://graph.instagram.com/me?fields=id,username,account_type&access_token={$this->authData['access_token']}");
+
+        $content = $response->getBody()->getContents();
+        $oAuth = json_decode($content);
+
+        // Get instagram user name 
+        $username = $oAuth->username;
+        dd($oAuth);
+        // do your code here
+    }
+
+    public function getUserInfo()
+    {
+        $igData = DB::table('instagram_auths');
+
+        if ($igData->count() > 0) {
+
+            $igDataResult = $igData->first();
+
+            $curTimeStamp = time();
+
+            if (($curTimeStamp-$igDataResult->valid_till) >= $igDataResult->expires_in) {
+                
+                $this->refreshIGToken($igDataResult->access_token);
+
+            }else{
+
+                $this->authData['access_token'] = $igDataResult->access_token;
+                $this->authData['user_id'] = $igDataResult->user_id;
+
+            }
+
+        }else{
+            $this->generateIGToken();
+        }
+        
+        $client = new Client();
+        // Get user info
+        $response = $client->request('GET', 'https://graph.instagram.com/me?fields=id,username,account_type&access_token='.$this->authData['access_token']);
+
+
+        $content = $response->getBody()->getContents();
+        $oAuth = json_decode($content);
+
+        return view('instagram.index',['oAuth'=> $oAuth]);
+    }
 }

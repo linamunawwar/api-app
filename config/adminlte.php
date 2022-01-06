@@ -307,8 +307,8 @@ return [
             'icon'    => 'fab fa-instagram',
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url'  => '#',
+                    'text' => 'User Info',
+                    'url'  => 'instagram',
                 ],
                 [
                     'text'    => 'level_one',
