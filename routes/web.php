@@ -29,3 +29,6 @@ Route::get('/user/delete/{id}', [App\Http\Controllers\UserController::class, 'de
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//google
+Route::get('/google', [App\Http\Controllers\GoogleController::class, 'index'])->name('home');
