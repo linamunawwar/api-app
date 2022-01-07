@@ -277,4 +277,44 @@ class InstagramController extends Controller
 
         return view('instagram.index',['oAuth'=> $oAuth]);
     }
+
+    public function getSearchHashtag()
+    {
+        return view('instagram.hashtag');
+    }
+
+    public function postSearchHashtag()
+    {
+        $igData = DB::table('instagram_auths');
+
+        if ($igData->count() > 0) {
+
+            $igDataResult = $igData->first();
+
+            $curTimeStamp = time();
+
+            if (($curTimeStamp-$igDataResult->valid_till) >= $igDataResult->expires_in) {
+                
+                $this->refreshIGToken($igDataResult->access_token);
+
+            }else{
+
+                $this->authData['access_token'] = $igDataResult->access_token;
+                $this->authData['user_id'] = $igDataResult->user_id;
+
+            }
+
+        }else{
+            $this->generateIGToken();
+        }
+        
+        $client = new Client();
+        // Get hashtag search
+        $response = $client->request('GET', 'https://graph.facebook.com/v12.0/ig_hashtag_search?user_id='.$this->authData['user_id'].'&q=bluebottle&access_token='.$this->authData['access_token']);
+
+        $content = $response->getBody()->getContents();
+        $data = json_decode($content);
+
+        return view('instagram.hashtag',['data'=> $data]);
+    }
 }

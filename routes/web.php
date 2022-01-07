@@ -44,6 +44,8 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 //instagram
 Route::get('instagram',[App\Http\Controllers\InstagramController::class, 'getUserInfo'])->name('instagram.info');
+Route::get('instagram/hashtag',[App\Http\Controllers\InstagramController::class, 'getSearchHashtag'])->name('instagram.hashtag');
+Route::post('instagram/hashtag_post',[App\Http\Controllers\InstagramController::class, 'postSearchHashtag'])->name('instagram.hashtag_post');
 //instagram Auth
 Route::get('login/instagram',[App\Http\Controllers\InstagramController::class, 'redirectToInstagramProvider'])->name('instagram.login');
 
