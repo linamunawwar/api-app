@@ -4,7 +4,21 @@
 @section('title', 'User')
 
 @section('content_header')
-    <h1>Searching Tweet</h1> {{ Session::get('sessionTweetField') }}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Search Tweet</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Search Tweet</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
 @stop
 
 @section('content')
@@ -34,8 +48,9 @@
     <table id="tweetSearch" class="table table-striped table-bordered text-center" style="width: 100%">
         <thead>
             <tr>
-                <th> No </th>
-                <th> Text Tweet </th>
+                <th width="5%"> No </th>
+                <th width="10%"> Status </th>
+                <th width="40%"> Text Tweet </th>
                 <th> Nama User </th>
                 <th> Asal Negara </th>
                 <th> Tanggal Dibuat </th>
@@ -61,12 +76,17 @@
     <script> 
         $(function () {
             function newDate(dateObject) {
-                var d = new Date(dateObject);
-                var day = String(d.getDate()).padStart(2, '0');
-                var month = String(d.getMonth() + 1).padStart(2, '0');
-                var year = d.getFullYear();
+                var Hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum&#39;at', 'Sabtu', 'Minggu'];
+                var Bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember' ];
                 
-                var date = day + "  " + month + "  " + year;
+                var d       = new Date(dateObject);
+                var nDate   = d.getDate();
+                var day     = d.getDay();
+                var month   = d.getMonth();
+                var year    = d.getYear();
+                    year    = (year < 1000) ? year + 1900 : year; 
+                
+                var date = Hari[day] +", "+ nDate+ " " + Bulan[month] + "  " + year;
             
                 return date;
             };            
@@ -75,6 +95,7 @@
                 $('#tweetSearch').DataTable().clear().destroy();
                 var query = $('#tweetField').val();
                 var _token = $('#_token').val();
+                var replyOrTweet = "";
 
                 $.ajax({
                     type: "post",
@@ -88,15 +109,21 @@
 
                         var jumlahData = 0;
                         $.each(response['statuses'],function(i,val){
+                            if(response['statuses'][i]['in_reply_to_status_id'] == null){
+                                replyOrTweet = "Tweet";
+                            }else{
+                                replyOrTweet = "Reply"
+                            }
                             jumlahData++;
                             var table="<tr  class='data_"+jumlahData+"'>";
-                                table+="<td>"+jumlahData+"</td>";
+                                table+="<td>"+jumlahData+"<input type='hidden' name='id_str[]' value='"+response['statuses'][i]['id_str']+"' id='id_str"+jumlahData+"'></td>";
+                                table+="<td>"+replyOrTweet+"<input type='hidden' name='replyOrTweet[]' value='"+replyOrTweet+"' id='replyOrTweet_"+jumlahData+"'></td>";
                                 table+="<td>"+response['statuses'][i]['text']+"<input type='hidden' name='text[]' value='"+response['statuses'][i]['text']+"' id='text_"+jumlahData+"'></td>";
                                 table+="<td>"+response['statuses'][i]['user']['name']+"<input type='hidden' name='userName[]' value='"+response['statuses'][i]['user']['name']+"' id='userName_"+jumlahData+"'></td>";
                                 table+="<td>"+response['statuses'][i]['user']['location']+"<input type='hidden' name='userLocation[]' value='"+response['statuses'][i]['user']['location']+"' id='userLocation_"+jumlahData+"'></td>";
                                 table+="<td>"+ newDate(response['statuses'][i]['created_at'])+"<input type='hidden' name='date[]' value='"+response['statuses'][i]['created_at']+"' id='date_"+jumlahData+"'></td>";
                                 table+="<td>";
-                                table+="<a class='btn btn-block btn-info' idsub='"+jumlahData+"'>Telusuri</a>";
+                                table+="<button type='button' class='btn btn-info btn-flat-right telusuri' idsub='"+response['statuses'][i]['id_str']+"' id='"+jumlahData+"'>Telusuri</button>";
                                 table+="</td>";
                                 table+="</tr>";                                
                                 $('#tweetSearch tbody.data').append(table);
@@ -108,6 +135,15 @@
                 })               
             });
 
+            $(document).on("click", "button.telusuri", function(e){
+                e.preventDefault();
+                var id = $(this).attr('idsub');
+                var jumlahdata = $('#jumlah_data').val();
+                
+                var url = "{{  route('twitter.telusuri', ":id")  }}";
+                url = url.replace(':id', id);
+                window.location.href=url;
+            });
             
         });
     </script>
