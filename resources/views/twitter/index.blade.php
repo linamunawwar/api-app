@@ -72,7 +72,7 @@
             };            
 
             $(document).on("click", "button.tweetSearch", function(e){
-                console.log("Masuk")
+                $('#tweetSearch').DataTable().clear().destroy();
                 var query = $('#tweetField').val();
                 var _token = $('#_token').val();
 
@@ -84,10 +84,9 @@
                         '_token': _token
                     },
                     success: function(response){
-
                         console.log(response['statuses'])
 
-                        var jumlahData = 1;
+                        var jumlahData = 0;
                         $.each(response['statuses'],function(i,val){
                             jumlahData++;
                             var table="<tr  class='data_"+jumlahData+"'>";
@@ -99,7 +98,7 @@
                                 table+="<td>";
                                 table+="<a class='btn btn-block btn-info' idsub='"+jumlahData+"'>Telusuri</a>";
                                 table+="</td>";
-                                table+="</tr>";
+                                table+="</tr>";                                
                                 $('#tweetSearch tbody.data').append(table);
                         });
 
