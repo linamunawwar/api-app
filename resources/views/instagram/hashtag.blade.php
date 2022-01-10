@@ -33,20 +33,30 @@
         <table id="tweetSearch" class="table table-striped table-bordered text-center" style="width: 100%">
             <thead>
                 <tr>
-                    <th>Text Tweet</th>
-                    <th>Nama User</th>
-                    <th>Tanggal Dibuat</th>
-                    <th>Action</th>
+                    <th>User</th>
+                    <th>Post</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <a href="#" class="btn btn-block btn-info">Lebih Lanjut</a>
-                    </td>
+                    <td>{{$data['user'][1]}}</td>
+                    <td>{{$data['post'][1]}}</td>
+                </tr>
+                <tr>
+                    <td>{{$data['user'][2]}}</td>
+                    <td>{{$data['post'][2]}}</td>
+                </tr>
+                <tr>
+                    <td>{{$data['user'][3]}}</td>
+                    <td>{{$data['post'][3]}}</td>
+                </tr>
+                <tr>
+                    <td>{{$data['user'][4]}}</td>
+                    <td>{{$data['post'][4]}}</td>
+                </tr>
+                <tr>
+                    <td>{{$data['user'][5]}}</td>
+                    <td>{{$data['post'][5]}}</td>
                 </tr>
             </tbody>
         </table>

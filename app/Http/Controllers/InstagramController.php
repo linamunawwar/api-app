@@ -310,11 +310,20 @@ class InstagramController extends Controller
         
         $client = new Client();
         // Get hashtag search
-        $response = $client->request('GET', 'https://graph.facebook.com/v12.0/ig_hashtag_search?user_id='.$this->authData['user_id'].'&q=bluebottle&access_token='.$this->authData['access_token']);
+        // $response = $client->request('GET', 'https://graph.facebook.com/v12.0/ig_hashtag_search?user_id='.$this->authData['user_id'].'&q=bluebottle&access_token='.$this->authData['access_token']);
 
-        $content = $response->getBody()->getContents();
-        $data = json_decode($content);
-
+        // $content = $response->getBody()->getContents();
+        // $data = json_decode($content);
+        $data['user'][1]='@user1';
+        $data['post'][1]='#hashtag#hashtag#hashtag';
+        $data['user'][2]='@user1';
+        $data['post'][2]='#hashtag#hashtag#hashtag';
+        $data['user'][3]='@user1';
+        $data['post'][3]='#hashtag#hashtag#hashtag';
+        $data['user'][4]='@user1';
+        $data['post'][4]='#hashtag#hashtag#hashtag';
+        $data['user'][5]='@user1';
+        $data['post'][5]='#hashtag#hashtag#hashtag';
         return view('instagram.hashtag',['data'=> $data]);
     }
 }
