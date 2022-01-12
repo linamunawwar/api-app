@@ -74,6 +74,47 @@
                             <a href="{{ route('instagram.login') }}" class="btn btn-block" style="color: #FFF; background-color: #bc2a8d;">
                                 <i class="fab fa-instagram mr-2"></i> Sign in using Instagram
                             </a>
+                            <div id="fb-root"></div>
+                            <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v12.0&appId=632917004494593&autoLogAppEvents=1" nonce="h4v2tDsS"></script>
+
+                            <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
+
+
+                            <fb:login-button 
+                              scope="public_profile,email"
+                              onlogin="checkLoginState();">
+                            </fb:login-button>
+                            <script>
+                              window.fbAsyncInit = function() {
+                                FB.init({
+                                  appId      : '632917004494593',
+                                  cookie     : true,
+                                  xfbml      : true,
+                                  version    : 'v12.0'
+                                });
+                                  
+                                FB.AppEvents.logPageView();   
+                                  
+                              };
+
+                              (function(d, s, id){
+                                 var js, fjs = d.getElementsByTagName(s)[0];
+                                 if (d.getElementById(id)) {return;}
+                                 js = d.createElement(s); js.id = id;
+                                 js.src = "https://connect.facebook.net/en_US/sdk.js";
+                                 fjs.parentNode.insertBefore(js, fjs);
+                               }(document, 'script', 'facebook-jssdk'));
+
+                              FB.getLoginStatus(function(response) {
+                                    statusChangeCallback(response);
+                                });
+
+                              function checkLoginState() {
+                                  FB.getLoginStatus(function(response) {
+                                    statusChangeCallback(response);
+                                  });
+                                }
+                            </script>
                         </div>
                     </form>
                 </div>
