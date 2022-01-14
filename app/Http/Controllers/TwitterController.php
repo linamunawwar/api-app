@@ -77,4 +77,40 @@ class TwitterController extends Controller
 
         return $response;
     }
+
+    public function telusuri($id)
+    {
+        return view('twitter.telusuri', ['id' => $id]);
+    }
+
+    public function show_tweet($id)
+    {
+        $twitter = SocialAuth::query()->first();
+        $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
+        $push->setTimeouts(10, 15);
+        $push->ssl_verifypeer = true;
+        $push->get('statuses/show', [
+            'id' => $id,
+            "tweet_mode" => "extended"
+        ]);        
+        
+        $response = response()->json($push->getLastBody());
+        return $response;
+    }
+
+    public function retweets_tweet($id)
+    {
+        $twitter = SocialAuth::query()->first();
+        $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
+        $push->setTimeouts(10, 15);
+        $push->ssl_verifypeer = true;
+        $push->get('statuses/retweets', [
+            'id' => $id,
+            "tweet_mode" => "extended",
+            "count" => "100"
+        ]);        
+        
+        $response = response()->json($push->getLastBody());
+        return $response;
+    }
 }
