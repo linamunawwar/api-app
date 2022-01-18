@@ -1,0 +1,5 @@
+---
+deployment:
+tasks:
+- export DEPLOYPATH=/home/ultb6792/public_html
+- /bin/cp -r /home/ultb6792/repositories/api-app $DEPLOYPATH
