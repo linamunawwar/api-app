@@ -45,6 +45,7 @@ Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
 //instagram
 Route::get('instagram',[App\Http\Controllers\InstagramController::class, 'getUserInfo'])->name('instagram.info');
 Route::get('instagram/hashtag',[App\Http\Controllers\InstagramController::class, 'getSearchHashtag'])->name('instagram.hashtag');
@@ -56,3 +57,7 @@ Route::get('login/instagram/callback', [App\Http\Controllers\InstagramController
 
 Route::get('/get-photos', [App\Http\Controllers\InstagramController::class, 'getMedia']);
 Route::get('/ig-redirect-uri', [App\Http\Controllers\InstagramController::class, 'igRedirectUri']); //this is the url earlier we added in app setup in facebook developer console
+
+//google
+Route::get('/google', [App\Http\Controllers\GoogleController::class, 'index'])->name('home');
+
