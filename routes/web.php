@@ -36,6 +36,9 @@ Route::get('/media/twitter', [App\Http\Controllers\TwitterController::class, 'tw
 Route::get('/twitter/callback', [App\Http\Controllers\TwitterController::class, 'twitter_callback'])->name('media.callback');
 
 Route::post('/twitter/search', [App\Http\Controllers\TwitterController::class, 'fetch_twitter'])->name('twitter.search');
+Route::get('/twitter/telusuri/{id}', [App\Http\Controllers\TwitterController::class, 'telusuri'])->name('twitter.telusuri');
+Route::get('/twitter/show/{id}', [App\Http\Controllers\TwitterController::class, 'show_tweet'])->name('twitter.browse');
+Route::get('/twitter/retweets/{id}', [App\Http\Controllers\TwitterController::class, 'retweets_tweet'])->name('twitter.retweets');
 
 
 Auth::routes();
