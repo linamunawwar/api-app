@@ -57,6 +57,11 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function socialAccounts()
+    {
+      return $this->hasMany(SocialAccount::class);
+    }
+
     public function authorizeRoles($roles)
     {
       if ($this->hasAnyRole($roles)) {
