@@ -61,3 +61,8 @@ Route::get('/ig-redirect-uri', [App\Http\Controllers\InstagramController::class,
 //google
 Route::get('/google', [App\Http\Controllers\GoogleController::class, 'index'])->name('home');
 
+/**
+ * socialite auth
+ */
+Route::get('/auth/{provider}', [App\Http\Controllers\Auth\SocialiteController::class, 'redirectToProvider']);
+Route::get('/auth/{provider}/callback', [App\Http\Controllers\Auth\SocialiteController::class, 'handleProvideCallback']);
