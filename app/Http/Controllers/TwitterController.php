@@ -5,54 +5,38 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Models\SocialAuth;
+use App\Models\User;
+use Socialite;
 use Session;
 
 class TwitterController extends Controller
 {
+
+    public function __construct()
+    {
+    }
+
     private $consumerKey = "xCtAHgU6RwikqPdqmotJRdacT";
     private $consumerSecret = "Yh25mmLfi8u8B9dTXS6IJOtWiXMb8mchnGoYuAbrCO4jHxiMeL";
 
     // Authorization Twitter
-    public function twitter_connect(Request $request)
-    {
-        $callback = route('media.callback');
-
-        $_twitter_connect = new TwitterOAuth($this->consumerKey, $this->consumerSecret);
-        $_access_token = $_twitter_connect->oauth('oauth/request_token', ['oauth_callback' => $callback]);
-        $_route = $_twitter_connect->url('oauth/authorize', ['oauth_token' => $_access_token['oauth_token']]);
-
-        return redirect($_route);
+    public function twitter_connect(){
+        $provider = 'twitter';
+        return Socialite::driver($provider)->redirect();
     }
 
-    public function twitter_callback(Request $request)
-    {
-        $response = $request->all();
+    public function twitter_callback(){
+        $twitterSocial =   Socialite::driver('twitter')->user();
+        $twitterSocial->media = "twitter";
 
-        $oauth_token = $response['oauth_token'];
-        $oauth_verifier = $response['oauth_verifier'];
-
-        $_twitter_connect = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $oauth_token, $oauth_verifier);
-        $token = $_twitter_connect->oauth('oauth/access_token', ['oauth_verifier' => $oauth_verifier]);
+        $findUser = User::createOrFind($twitterSocial);
         
-        $oauth_token = $token['oauth_token'];
-        $screen_name = $token['screen_name'];
-        $oauth_token_secrete = $token['oauth_token_secret'];
-
-
-        $save = SocialAuth::query()->updateOrCreate(
-            ['twitter_screen_name' => $screen_name],
-            [
-                'twitter_oauth_token' => $oauth_token,
-                'twitter_oauth_token_secrete' => $oauth_token_secrete,
-            ]
-        );
-
-        return redirect()->route('user.index');
-
-        // $this->MessageToTwitter($oauth_token, $oauth_token_secrete);
+        if ($findUser == 1) {
+            return redirect()->route('twitter');
+        }
     }
 
-    
+       
 
     public function index()
     {
@@ -111,6 +95,32 @@ class TwitterController extends Controller
         ]);        
         
         $response = response()->json($push->getLastBody());
+        return $response;
+    }
+
+
+    public function user_tweet()
+    {
+        return view('twitter.userTweet.index');
+    }
+
+    public function userTweet(Request $request)
+    {
+        $string = $request->input('nickName') ?? "devproject22";
+
+
+        $twitter = SocialAuth::query()->first();
+        $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
+        $push->setTimeouts(10, 15);
+        $push->ssl_verifypeer = true;
+        $push->get("statuses/user_timeline", [
+            "screen_name" => "$string", 
+            "tweet_mode" => "extended",
+            "count" => "100"
+        ]);
+
+        $response = response()->json($push->getLastBody());
+
         return $response;
     }
 }

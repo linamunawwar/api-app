@@ -12,8 +12,11 @@ class SocialAuth extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'twitter_screen_name',
         'twitter_oauth_token',
-        'twitter_oauth_token_secrete'
+        'twitter_oauth_token_secrete',
+        'provider',
+        'provider_id'
     ];
 }

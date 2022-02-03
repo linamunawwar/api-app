@@ -29,17 +29,23 @@ Route::get('/user/delete/{id}', [App\Http\Controllers\UserController::class, 'de
 
 
 /* Social Media */
+
+//Twitter
 Route::get('/twitter', [App\Http\Controllers\TwitterController::class, 'index'])->name('twitter');
 
 // Authorization Twitter
 Route::get('/media/twitter', [App\Http\Controllers\TwitterController::class, 'twitter_connect'])->name('media.twitter');
 Route::get('/twitter/callback', [App\Http\Controllers\TwitterController::class, 'twitter_callback'])->name('media.callback');
 
+//Search Tweet
 Route::post('/twitter/search', [App\Http\Controllers\TwitterController::class, 'fetch_twitter'])->name('twitter.search');
 Route::get('/twitter/telusuri/{id}', [App\Http\Controllers\TwitterController::class, 'telusuri'])->name('twitter.telusuri');
 Route::get('/twitter/show/{id}', [App\Http\Controllers\TwitterController::class, 'show_tweet'])->name('twitter.browse');
 Route::get('/twitter/retweets/{id}', [App\Http\Controllers\TwitterController::class, 'retweets_tweet'])->name('twitter.retweets');
 
+//Search User
+Route::get('/twitter/user', [App\Http\Controllers\TwitterController::class, 'user_tweet'])->name('twitter.user');
+Route::post('/twitter/user/search', [App\Http\Controllers\TwitterController::class, 'userTweet'])->name('twitter.user.search');
 
 Auth::routes();
 
