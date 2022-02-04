@@ -60,6 +60,7 @@ Route::get('/ig-redirect-uri', [App\Http\Controllers\InstagramController::class,
 
 //google
 Route::get('/google', [App\Http\Controllers\GoogleController::class, 'index'])->name('home');
+Route::post('/google-search', [App\Http\Controllers\GoogleController::class, 'search'])->name('google.search');
 
 /**
  * socialite auth

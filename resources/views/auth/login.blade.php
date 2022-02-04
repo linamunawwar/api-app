@@ -57,11 +57,11 @@
                                     {{ __('Login') }}
                                 </button>
 
-                                @if (Route::has('password.request'))
+                                <!-- @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
                                         {{ __('Forgot Your Password?') }}
                                     </a>
-                                @endif
+                                @endif -->
                             </div>
                         </div>
 
@@ -71,13 +71,13 @@
                                 <i class="fab fa-twitter mr-2"></i> Sign in using Twitter
                             </a>
 
-                            <a href="{{ route('instagram.login') }}" class="btn btn-block" style="color: #FFF; background-color: #bc2a8d;">
+                            <!-- <a href="{{ route('instagram.login') }}" class="btn btn-block" style="color: #FFF; background-color: #bc2a8d;">
                                 <i class="fab fa-instagram mr-2"></i> Sign in using Instagram
                             </a>
                             
                             <a href="/auth/facebook" class="btn btn-primary">
                                     Login Dengan Facebook
-                            </a>
+                            </a> -->
                             
                         </div>
                     </form>
