@@ -109,10 +109,12 @@
 
                         var jumlahData = 0;
                         $.each(response['statuses'],function(i,val){
-                            if(response['statuses'][i]['in_reply_to_status_id'] == null){
-                                replyOrTweet = "Tweet";
+                            if(response['statuses'][i]['in_reply_to_status_id'] != null){
+                                replyOrTweet = "Reply";
+                            }else if(response['statuses'][i]['retweeted_status'] != null){
+                                replyOrTweet = "Retweeted";
                             }else{
-                                replyOrTweet = "Reply"
+                                replyOrTweet = "Tweet";
                             }
                             jumlahData++;
                             var table="<tr  class='data_"+jumlahData+"'>";

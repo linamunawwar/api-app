@@ -1495,18 +1495,6 @@
         },
         {
             "name": "laravel/socialite",
-<<<<<<< HEAD
-            "version": "v5.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/socialite.git",
-                "reference": "cb5b5538c207efa19aa5d7f46cd76acb03ec3055"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/socialite/zipball/cb5b5538c207efa19aa5d7f46cd76acb03ec3055",
-                "reference": "cb5b5538c207efa19aa5d7f46cd76acb03ec3055",
-=======
             "version": "v5.3.0",
             "source": {
                 "type": "git",
@@ -1517,7 +1505,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/socialite/zipball/4e6f7e40de9a54ad641de5b8e29cdf1e73842e10",
                 "reference": "4e6f7e40de9a54ad641de5b8e29cdf1e73842e10",
->>>>>>> 5accd8f76f4ad115f9fa7c31c53a3c8b4533b641
                 "shasum": ""
             },
             "require": {
@@ -1573,11 +1560,7 @@
                 "issues": "https://github.com/laravel/socialite/issues",
                 "source": "https://github.com/laravel/socialite"
             },
-<<<<<<< HEAD
-            "time": "2022-02-01T16:31:36+00:00"
-=======
             "time": "2022-01-12T18:05:39+00:00"
->>>>>>> 5accd8f76f4ad115f9fa7c31c53a3c8b4533b641
         },
         {
             "name": "laravel/tinker",
