@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'bc98f554072d35084a90ae72fdb8c27c47fc9df1',
+        'reference' => 'ae161c879eeb3604d47bcf39b70f62b87ed5edf5',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -436,7 +436,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'bc98f554072d35084a90ae72fdb8c27c47fc9df1',
+            'reference' => 'ae161c879eeb3604d47bcf39b70f62b87ed5edf5',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -467,12 +467,12 @@
             'dev_requirement' => false,
         ),
         'laravel/socialite' => array(
-            'pretty_version' => 'v5.5.0',
-            'version' => '5.5.0.0',
+            'pretty_version' => 'v5.3.0',
+            'version' => '5.3.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/socialite',
             'aliases' => array(),
-            'reference' => 'cb5b5538c207efa19aa5d7f46cd76acb03ec3055',
+            'reference' => '4e6f7e40de9a54ad641de5b8e29cdf1e73842e10',
             'dev_requirement' => false,
         ),
         'laravel/tinker' => array(
