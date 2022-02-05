@@ -110,6 +110,7 @@
                         $.each(response,function(i,val){
                             if(response[i]['in_reply_to_screen_name'] == null){
                                 replyOrTweet = "Tweet";
+                                response[i]['in_reply_to_screen_name'] = " - ";
                             }else{
                                 replyOrTweet = "Retweet"
                             }
