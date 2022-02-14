@@ -38,6 +38,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header p-2">
+                        <a href="{{ route('twitter.retweets.download', $id) }}" target="blank" class="btn btn-info download" style="float: right"><i class="fas fa-download" style="font-size: 13px"></i> Diagram</a>
                         <ul class="nav nav-pills">
                             <li class="nav-item"><a class="nav-link active" href="#userTweet" data-toggle="tab">Data User Tweet</a></li>
                             <li class="nav-item"><a class="nav-link retweetByClick" href="#retweetBy" data-toggle="tab">Retweet By</a></li>
@@ -200,8 +201,11 @@
 
             $(('.nav-pills li a.retweetByClick')).click(function(e){
                 var id = $('#id_retweet').val();
-
-                if($('#id_retweetClick').val() != 1){
+                if(id != null && id != ""){
+                    console.log("Masuk ");
+                    console.log(id);
+                }
+                if($('#id_retweetClick').val() != 1 && id != ""){
                     $.ajax({
                         type: "get",
                         url: '{{ url('twitter/show') }}'+ "/" + id,
@@ -240,13 +244,18 @@
                             }
                         }
                     })
-                } 
+                }else{
+                    document.getElementById("image_retweetBy").innerHTML = "<img class='img-circle img-bordered-sm' src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png' alt='user image'>";
+                    document.getElementById("name_retweetBy").innerHTML = " Tidak Ada Data ";
+                    document.getElementById("tgl_retweetBy").innerHTML = " Tidak Ada Data ";
+                    document.getElementById("text_retweetBy").innerHTML = " Tidak Ada Data ";                    
+                }
             });
 
             $(('.nav-pills li a.allRetweetClick')).click(function(e){
                 var id = $('#id_retweet').val();
                 
-                if($('#id_allRetweetClick').val() != 1){
+                if($('#id_allRetweetClick').val() != 1 && id != ""){
                     $.ajax({
                         type: "get",
                         url: '{{ url('twitter/retweets') }}'+ "/" + id,
@@ -279,9 +288,16 @@
                             }
                         }
                     })
-                } 
-            });
-            
+                }else{
+                    var div = "<div class='timeline-item'>";
+                            div += "<h3 class='timeline-header'>";
+                                div += "<span class='username'> Tidak Ada Data </span>";
+                            div += " </h3>";
+                        div += "</div>";
+                
+                    $('#allRetweet').append(div);
+                }
+            });            
         });
     </script>
 @endpush
