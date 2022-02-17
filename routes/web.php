@@ -42,6 +42,7 @@ Route::post('/twitter/search', [App\Http\Controllers\TwitterController::class, '
 Route::get('/twitter/telusuri/{id}', [App\Http\Controllers\TwitterController::class, 'telusuri'])->name('twitter.telusuri');
 Route::get('/twitter/show/{id}', [App\Http\Controllers\TwitterController::class, 'show_tweet'])->name('twitter.browse');
 Route::get('/twitter/retweets/{id}', [App\Http\Controllers\TwitterController::class, 'retweets_tweet'])->name('twitter.retweets');
+Route::get('/twitter/retweets/download/{id}', [App\Http\Controllers\TwitterController::class, 'retweets_download'])->name('twitter.retweets.download');
 
 //Search User
 Route::get('/twitter/user', [App\Http\Controllers\TwitterController::class, 'user_tweet'])->name('twitter.user');
