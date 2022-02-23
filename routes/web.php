@@ -34,8 +34,8 @@ Route::get('/user/delete/{id}', [App\Http\Controllers\UserController::class, 'de
 Route::get('/twitter', [App\Http\Controllers\TwitterController::class, 'index'])->name('twitter');
 
 // Authorization Twitter
-Route::get('/media/twitter', [App\Http\Controllers\TwitterController::class, 'twitter_connect'])->name('media.twitter');
-Route::get('/twitter/callback', [App\Http\Controllers\TwitterController::class, 'twitter_callback'])->name('media.callback');
+Route::get('/media/twitter', [App\Http\Controllers\TwitterAuthenticationController::class, 'twitter_connect'])->name('media.twitter');
+Route::get('/twitter/callback', [App\Http\Controllers\TwitterAuthenticationController::class, 'twitter_callback'])->name('media.callback');
 
 //Search Tweet
 Route::post('/twitter/search', [App\Http\Controllers\TwitterController::class, 'fetch_twitter'])->name('twitter.search');

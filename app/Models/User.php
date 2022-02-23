@@ -100,12 +100,11 @@ class User extends Authenticatable
     {
       // dd($request->password);
       $findUser = SocialAuth::where('provider', $request->media)->where('provider_id', $request->id)->first();
-      
       if ($findUser == null) {
           $user = new User;
 
           $user->name              = $request->nickname;
-          $user->email             = $request->email==null?' ':$request->email;
+          $user->email             = $request->email==null?$request->nickname:$request->email;
           $user->email_verified_at = null;
           $user->password          = bcrypt('12345678');
           $user->role_id           = 2;
@@ -123,11 +122,13 @@ class User extends Authenticatable
             $userSocial->provider_id                  = $request->id;
 
             if ($userSocial->save()) {
-              return 1;
+              $user = User::where('id', $user->id)->first();
+              return $user;
             }
           }
       } else {
-        return 1;
+        $user = User::where('id', $findUser->user_id)->first();
+        return $user;
       }
       
 
