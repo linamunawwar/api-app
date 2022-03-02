@@ -8,12 +8,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Search Tweet </h1>
+                <h1>Search Tweet By User </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Search Tweet</li>
+                    <li class="breadcrumb-item active">Search User Tweet</li>
                 </ol>
             </div>
         </div>
@@ -37,7 +37,7 @@
             {{-- @csrf --}}
             <div class="input-group input-group">
                 <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-                <input type="text" id="tweetField" name="tweetField" class="form-control" placeholder="Search Tweet">
+                <input type="text" id="nickName" name="nickName" class="form-control" placeholder="Search Tweet">
                 <span class="input-group-append">
                     <button type="button" class="btn btn-info btn-flat-right tweetSearch"><i><span class="fa fa-search"> </span></i> <b>Search</b> </button>
                 </span>
@@ -51,8 +51,7 @@
                 <th width="5%"> No </th>
                 <th width="10%"> Status </th>
                 <th width="40%"> Text Tweet </th>
-                <th> Nama User </th>
-                <th> Asal Negara </th>
+                <th> Retweet Dari </th>
                 <th> Tanggal Dibuat </th>
                 <th> Action </th>
             </tr>
@@ -93,39 +92,37 @@
 
             $(document).on("click", "button.tweetSearch", function(e){
                 $('#tweetSearch').DataTable().clear().destroy();
-                var query = $('#tweetField').val();
+                var nickName = $('#nickName').val();
                 var _token = $('#_token').val();
                 var replyOrTweet = "";
 
                 $.ajax({
                     type: "post",
-                    url: '{{ url('twitter/search') }}',
+                    url: '{{ url('/twitter/user/search') }}',
                     data: {
-                        'tweetField' : query,
+                        'nickName' : nickName,
                         '_token': _token
                     },
                     success: function(response){
-                        console.log(response['statuses'])
-
+                        
                         var jumlahData = 0;
-                        $.each(response['statuses'],function(i,val){
-                            if(response['statuses'][i]['in_reply_to_status_id'] != null){
-                                replyOrTweet = "Reply";
-                            }else if(response['statuses'][i]['retweeted_status'] != null){
-                                replyOrTweet = "Retweeted";
-                            }else{
+                        console.log(response)
+                        $.each(response,function(i,val){
+                            if(response[i]['in_reply_to_screen_name'] == null){
                                 replyOrTweet = "Tweet";
+                                response[i]['in_reply_to_screen_name'] = " - ";
+                            }else{
+                                replyOrTweet = "Retweet"
                             }
                             jumlahData++;
                             var table="<tr  class='data_"+jumlahData+"'>";
-                                table+="<td>"+jumlahData+"<input type='hidden' name='id_str[]' value='"+response['statuses'][i]['id_str']+"' id='id_str"+jumlahData+"'></td>";
+                                table+="<td>"+jumlahData+"<input type='hidden' name='id_str[]' value='"+response[i]['id_str']+"' id='id_str"+jumlahData+"'></td>";
                                 table+="<td>"+replyOrTweet+"<input type='hidden' name='replyOrTweet[]' value='"+replyOrTweet+"' id='replyOrTweet_"+jumlahData+"'></td>";
-                                table+="<td>"+response['statuses'][i]['text']+"<input type='hidden' name='text[]' value='"+response['statuses'][i]['text']+"' id='text_"+jumlahData+"'></td>";
-                                table+="<td>"+response['statuses'][i]['user']['name']+"<input type='hidden' name='userName[]' value='"+response['statuses'][i]['user']['name']+"' id='userName_"+jumlahData+"'></td>";
-                                table+="<td>"+response['statuses'][i]['user']['location']+"<input type='hidden' name='userLocation[]' value='"+response['statuses'][i]['user']['location']+"' id='userLocation_"+jumlahData+"'></td>";
-                                table+="<td>"+ newDate(response['statuses'][i]['created_at'])+"<input type='hidden' name='date[]' value='"+response['statuses'][i]['created_at']+"' id='date_"+jumlahData+"'></td>";
+                                table+="<td>"+response[i]['full_text']+"<input type='hidden' name='full_text[]' value='"+response[i]['full_text']+"' id='full_text_"+jumlahData+"'></td>";
+                                table+="<td>"+response[i]['in_reply_to_screen_name']+"<input type='hidden' name='userName[]' value='"+response[i]['in_reply_to_screen_name']+"' id='userName_"+jumlahData+"'></td>";
+                                table+="<td>"+ newDate(response[i]['created_at'])+"<input type='hidden' name='date[]' value='"+response[i]['created_at']+"' id='date_"+jumlahData+"'></td>";
                                 table+="<td>";
-                                table+="<button type='button' class='btn btn-info btn-flat-right telusuri' idsub='"+response['statuses'][i]['id_str']+"' id='"+jumlahData+"'>Telusuri</button>";
+                                table+="<button type='button' class='btn btn-info btn-flat-right telusuri' idsub='"+response[i]['id_str']+"' id='"+jumlahData+"'>Telusuri</button>";
                                 table+="</td>";
                                 table+="</tr>";                                
                                 $('#tweetSearch tbody.data').append(table);

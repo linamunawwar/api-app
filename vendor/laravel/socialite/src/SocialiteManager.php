@@ -13,6 +13,7 @@ use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\GitlabProvider;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\LinkedInProvider;
+use Laravel\Socialite\Two\TwitterProvider as TwitterOAuth2Provider;
 use League\OAuth1\Client\Server\Twitter as TwitterServer;
 
 class SocialiteManager extends Manager implements Contracts\Factory
@@ -113,6 +114,23 @@ class SocialiteManager extends Manager implements Contracts\Factory
     }
 
     /**
+<<<<<<< HEAD
+     * Create an instance of the specified driver.
+     *
+     * @return \Laravel\Socialite\Two\AbstractProvider
+     */
+    protected function createTwitterOAuth2Driver()
+    {
+        $config = $this->config->get('services.twitter');
+
+        return $this->buildProvider(
+            TwitterOAuth2Provider::class, $config
+        );
+    }
+
+    /**
+=======
+>>>>>>> 5accd8f76f4ad115f9fa7c31c53a3c8b4533b641
      * Build an OAuth 2 provider instance.
      *
      * @param  string  $provider

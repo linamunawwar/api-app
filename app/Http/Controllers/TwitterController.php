@@ -5,54 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Models\SocialAuth;
+use App\Models\User;
+use Socialite;
 use Session;
+use PDF;
+use Auth;
 
 class TwitterController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+    }
+
     private $consumerKey = "xCtAHgU6RwikqPdqmotJRdacT";
-    private $consumerSecret = "Yh25mmLfi8u8B9dTXS6IJOtWiXMb8mchnGoYuAbrCO4jHxiMeL";
-
-    // Authorization Twitter
-    public function twitter_connect(Request $request)
-    {
-        $callback = route('media.callback');
-
-        $_twitter_connect = new TwitterOAuth($this->consumerKey, $this->consumerSecret);
-        $_access_token = $_twitter_connect->oauth('oauth/request_token', ['oauth_callback' => $callback]);
-        $_route = $_twitter_connect->url('oauth/authorize', ['oauth_token' => $_access_token['oauth_token']]);
-
-        return redirect($_route);
-    }
-
-    public function twitter_callback(Request $request)
-    {
-        $response = $request->all();
-
-        $oauth_token = $response['oauth_token'];
-        $oauth_verifier = $response['oauth_verifier'];
-
-        $_twitter_connect = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $oauth_token, $oauth_verifier);
-        $token = $_twitter_connect->oauth('oauth/access_token', ['oauth_verifier' => $oauth_verifier]);
-        
-        $oauth_token = $token['oauth_token'];
-        $screen_name = $token['screen_name'];
-        $oauth_token_secrete = $token['oauth_token_secret'];
-
-
-        $save = SocialAuth::query()->updateOrCreate(
-            ['twitter_screen_name' => $screen_name],
-            [
-                'twitter_oauth_token' => $oauth_token,
-                'twitter_oauth_token_secrete' => $oauth_token_secrete,
-            ]
-        );
-
-        return redirect()->route('user.index');
-
-        // $this->MessageToTwitter($oauth_token, $oauth_token_secrete);
-    }
-
-    
+    private $consumerSecret = "Yh25mmLfi8u8B9dTXS6IJOtWiXMb8mchnGoYuAbrCO4jHxiMeL";     
 
     public function index()
     {
@@ -111,6 +80,132 @@ class TwitterController extends Controller
         ]);        
         
         $response = response()->json($push->getLastBody());
+        return $response;
+    }
+
+    public function combineData($response, $data)
+    {
+        $valBefore = null;
+        $tempPos = null;
+        $out = [];
+        $i = 0;
+        $j = 2;
+        $out[$i] = [
+            "id"        => $data->original->id, 
+            "text"      => $data->original->user->name, 
+            "title"     => "Tweet At <br>".date("d F Y", strtotime($data->original->created_at)), 
+            "width"     => "350", 
+            "height"    => "100", 
+            "dir"       => "horizontal", 
+            "img"       => $data->original->user->profile_image_url,
+            "posisi"    => 1, 
+            "parent"    => 0, 
+        ];
+        $i++;
+        foreach($response as $k => $subarray) {
+            foreach($subarray as $kk => $vv) {
+                if ($kk == 'created_at') {
+                    $vv = date('d F Y', strtotime($vv));
+                    if ($valBefore == $vv) {
+                        $out[$i] = [
+                            "id"        => $subarray->id, 
+                            "text"      => $subarray->user->name, 
+                            "title"     => date("d F Y", strtotime($subarray->created_at)), 
+                            "width"     => "350", 
+                            "height"    => "100", 
+                            "dir"       => "vertical", 
+                            "img"       => $subarray->user->profile_image_url,
+                            "posisi"    => $subarray->id, 
+                            "parent"    => $tempPos
+                        ];
+                    }else {
+                        $out[$i] = [
+                            "id"        => $subarray->id, 
+                            "text"      => $vv, 
+                            "title"     => date("d F Y", strtotime($subarray->created_at)),  
+                            "dir"       => "vertical", 
+                            "posisi"    => $j++, 
+                            "parent"    => 1
+                        ];
+                        $i++;
+
+                        $out[$i] = [
+                            "id"        => $subarray->id, 
+                            "text"      => $subarray->user->name, 
+                            "title"     => date("d F Y", strtotime($subarray->created_at)), 
+                            "width"     => "350", 
+                            "height"    => "100", 
+                            "dir"       => "vertical", 
+                            "img"       => $subarray->user->profile_image_url,
+                            "posisi"    => $subarray->id, 
+                            "parent"    => $out[$i-1]['posisi']
+                        ];
+                        $tempPos = $out[$i-1]['posisi'];
+                    }
+                    $valBefore = $vv;
+                }
+            }
+            $i++;
+        }
+
+        // dd($out);
+        return $out;
+    }
+
+    public function retweets_download($id)
+    {
+        $data = self::show_tweet($id); 
+
+        $twitter = SocialAuth::query()->first();
+        $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
+        $push->setTimeouts(10, 15);
+        $push->ssl_verifypeer = true;
+        $push->get('statuses/retweets', [
+            'id' => $data->original->retweeted_status->id_str,
+            "count" => "100"
+        ]);  
+
+        $response = response()->json($push->getLastBody());
+        $response = $response->original;
+
+        usort($response, function($a, $b) {
+            return strtotime($a->retweeted_status->created_at) - strtotime($b->retweeted_status->created_at);
+        });
+
+        $data = self::show_tweet($data->original->retweeted_status->id_str);
+        $response = self::combineData($response, $data);
+        
+        // dd($response);
+        return view('twitter.download', ["response" => $response]);
+        
+        // $pdf = PDF::loadview('twitter.download', ["response" => $response])
+        //         ->setPaper('a4', 'potrait');
+    	// return $pdf->stream();
+    }
+
+
+    public function user_tweet()
+    {
+        return view('twitter.userTweet.index');
+    }
+
+    public function userTweet(Request $request)
+    {
+        $string = $request->input('nickName') ?? "devproject22";
+
+
+        $twitter = SocialAuth::query()->first();
+        $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
+        $push->setTimeouts(10, 15);
+        $push->ssl_verifypeer = true;
+        $push->get("statuses/user_timeline", [
+            "screen_name" => "$string", 
+            "tweet_mode" => "extended",
+            "count" => "100"
+        ]);
+
+        $response = response()->json($push->getLastBody());
+
         return $response;
     }
 }

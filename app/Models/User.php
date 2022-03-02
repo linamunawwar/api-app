@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\SocialAuth;
 use App\Models\Role;
 
 class User extends Authenticatable
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -92,5 +94,46 @@ class User extends Authenticatable
         return true;
       }
       return false;
+    }
+
+    public static function createOrFind($request)
+    {
+      // dd($request->password);
+      $findUser = SocialAuth::where('provider', $request->media)->where('provider_id', $request->id)->first();
+      if ($findUser == null) {
+          $user = new User;
+
+          $user->name              = $request->nickname;
+          $user->email             = $request->email==null?$request->nickname:$request->email;
+          $user->email_verified_at = null;
+          $user->password          = bcrypt('12345678');
+          $user->role_id           = 2;
+          $user->remember_token    = null;
+          $user->created_at        = date('Y-m-d H:i:s');
+          
+          if ($user->save()) {
+            $userSocial = new SocialAuth;
+
+            $userSocial->user_id                      = $user->id;
+            $userSocial->twitter_screen_name          = $request->name;
+            $userSocial->twitter_oauth_token          = $request->token;
+            $userSocial->twitter_oauth_token_secrete  = $request->tokenSecret;
+            $userSocial->provider                     = 'Twitter';
+            $userSocial->provider_id                  = $request->id;
+
+            if ($userSocial->save()) {
+              $user = User::where('id', $user->id)->first();
+              return $user;
+            }
+          }
+      } else {
+        $user = User::where('id', $findUser->user_id)->first();
+        return $user;
+      }
+      
+
+      if ($user) {
+        return $user->id;
+      }
     }
 }
