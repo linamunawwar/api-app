@@ -9,35 +9,19 @@ use App\Models\User;
 use Socialite;
 use Session;
 use PDF;
+use Auth;
 
 class TwitterController extends Controller
 {
 
     public function __construct()
     {
+        $this->middleware('auth');
+
     }
 
     private $consumerKey = "xCtAHgU6RwikqPdqmotJRdacT";
-    private $consumerSecret = "Yh25mmLfi8u8B9dTXS6IJOtWiXMb8mchnGoYuAbrCO4jHxiMeL";
-
-    // Authorization Twitter
-    public function twitter_connect(){
-        $provider = 'twitter';
-        return Socialite::driver($provider)->redirect();
-    }
-
-    public function twitter_callback(){
-        $twitterSocial =   Socialite::driver('twitter')->user();
-        $twitterSocial->media = "twitter";
-
-        $findUser = User::createOrFind($twitterSocial);
-        
-        if ($findUser == 1) {
-            return redirect()->route('twitter');
-        }
-    }
-
-       
+    private $consumerSecret = "Yh25mmLfi8u8B9dTXS6IJOtWiXMb8mchnGoYuAbrCO4jHxiMeL";     
 
     public function index()
     {
