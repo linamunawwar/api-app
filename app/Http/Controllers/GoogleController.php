@@ -52,4 +52,21 @@ class GoogleController extends Controller
 
          
     }
+
+    public function downloadAll($query,$startIndex)
+    {
+        $i=1;
+        $result['items'] = [];
+        while ($i<100) {
+            $response = Http::get("https://www.googleapis.com/customsearch/v1?key=AIzaSyCDX4_dkyim-R5GurDRtWzD2PEeQD3SVqs&cx=2cf421576b7ce23aa&q=$query&start=$i");
+            $resultApi = json_decode($response, true);
+            if(array_key_exists('items',$resultApi)){
+                $result['items'] = array_merge($result['items'],$resultApi['items']);
+            }
+            $i = $i+10;
+        }
+        $result['queries']['request'][0]['title'] = $query;
+        $pdf = PDF::loadView('google.pdf', $result);
+        return $pdf->download('google-result.pdf');
+    }
 }

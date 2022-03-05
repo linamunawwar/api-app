@@ -112,6 +112,8 @@
                         result += '         </div>';
                         result += '     </div>';
                         result += ' </div>'; 
+                        result += '<a href="{{ url("google-search/download") }}/'+response.queries.request[0].searchTerms+'/'+response.queries.request[0].startIndex+'" id="download" style="text-align:right; margin:10px; float:center;" class="download btn btn-success" target="_blank">Download</a>';
+                        result += '<a href="{{ url("google-search/downloadAll") }}/'+response.queries.request[0].searchTerms+'/'+response.queries.request[0].startIndex+'" id="download" style="text-align:right; margin:10px; float:center;" class="download btn btn-success" target="_blank">Download All</a>';
                         if(response.queries.nextPage){
                             result += '<a href="" id="pageLink" style="text-align:right; margin:10px; float:right;" class="pageLink btn btn-info" value="'+response.queries.nextPage[0].startIndex+'">Next</a>';
                         }
@@ -163,7 +165,8 @@
                         result += '         </div>';
                         result += '     </div>';
                         result += ' </div>'; 
-                        result += '<a href="{{ url("google-search/download") }}/'+response.queries.request[0].searchTerms+'/'+response.queries.request[0].startIndex+'" id="download" style="text-align:right; margin:10px; float:center;" class="download btn btn-success">Download</a>';
+                        result += '<a href="{{ url("google-search/download") }}/'+response.queries.request[0].searchTerms+'/'+response.queries.request[0].startIndex+'" id="download" style="text-align:right; margin:10px; float:center;" class="download btn btn-success" target="_blank">Download</a>';
+                        result += '<a href="{{ url("google-search/downloadAll") }}/'+response.queries.request[0].searchTerms+'/'+response.queries.request[0].startIndex+'" id="download" style="text-align:right; margin:10px; float:center;" class="download btn btn-success"  target="_blank">Download All</a>';
                         if(response.queries.nextPage){
                             result += '<a href="" id="pageLink" style="text-align:right; margin:10px; float:right;" class="pageLink btn btn-info" value="'+response.queries.nextPage[0].startIndex+'">Next</a>';
                         }

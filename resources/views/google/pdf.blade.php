@@ -49,6 +49,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
+                    {{$queries['request'][0]['title']}}
                     <div class="ibox-content">
 
                         @foreach($items as $item)

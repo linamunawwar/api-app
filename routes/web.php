@@ -69,6 +69,7 @@ Route::get('/ig-redirect-uri', [App\Http\Controllers\InstagramController::class,
 Route::get('/google', [App\Http\Controllers\GoogleController::class, 'index'])->name('home');
 Route::post('/google-search', [App\Http\Controllers\GoogleController::class, 'search'])->name('google.search');
 Route::get('/google-search/download/{query}/{index}', [App\Http\Controllers\GoogleController::class, 'download'])->name('google.download');
+Route::get('/google-search/downloadAll/{query}/{index}', [App\Http\Controllers\GoogleController::class, 'downloadAll'])->name('google.downloadAll');
 
 /**
  * socialite auth
