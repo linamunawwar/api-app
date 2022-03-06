@@ -114,7 +114,6 @@ class SocialiteManager extends Manager implements Contracts\Factory
     }
 
     /**
-<<<<<<< HEAD
      * Create an instance of the specified driver.
      *
      * @return \Laravel\Socialite\Two\AbstractProvider
@@ -129,8 +128,6 @@ class SocialiteManager extends Manager implements Contracts\Factory
     }
 
     /**
-=======
->>>>>>> 5accd8f76f4ad115f9fa7c31c53a3c8b4533b641
      * Build an OAuth 2 provider instance.
      *
      * @param  string  $provider
