@@ -37,6 +37,7 @@
             {{-- @csrf --}}
             <div class="input-group input-group">
                 <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="notif" id="notif" value="{{ $notif }}">
                 <input type="text" id="nickName" name="nickName" class="form-control" placeholder="Search Tweet">
                 <span class="input-group-append">
                     <button type="button" class="btn btn-info btn-flat-right tweetSearch"><i><span class="fa fa-search"> </span></i> <b>Search</b> </button>
@@ -73,6 +74,14 @@
     <script src = "https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
 
     <script> 
+        $(document).ready( function () {
+            var notif = $('#notif').val();
+
+            if(notif == 0){
+                alert("Anda Perlu Login Menggunakan Twitter, Silahkan Logout Terlebih Dahulu !!");
+                document.location.href = '../home';
+            }
+        });
         $(function () {
             function newDate(dateObject) {
                 var Hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum&#39;at', 'Sabtu', 'Minggu'];

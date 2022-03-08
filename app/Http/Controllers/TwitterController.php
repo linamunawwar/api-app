@@ -25,7 +25,13 @@ class TwitterController extends Controller
 
     public function index()
     {
-        return view('twitter.index');
+        $notif = 1;
+        $user = User::where('id', \Auth::user()->id)->first();
+        $socialAuth = SocialAuth::where('user_id', $user->id)->first();
+        if ($socialAuth == null) {
+            $notif = 0;
+        }
+        return view('twitter.index', ['notif' => $notif]);
     }
 
     public function fetch_twitter(Request $request)
@@ -186,7 +192,14 @@ class TwitterController extends Controller
 
     public function user_tweet()
     {
-        return view('twitter.userTweet.index');
+        $notif = 1;
+        $user = User::where('id', \Auth::user()->id)->first();
+        $socialAuth = SocialAuth::where('user_id', $user->id)->first();
+        if ($socialAuth == null) {
+            $notif = 0;
+        }
+
+        return view('twitter.userTweet.index', ['notif' => $notif]);
     }
 
     public function userTweet(Request $request)
