@@ -20,8 +20,8 @@ class TwitterController extends Controller
 
     }
 
-    private $consumerKey = "xCtAHgU6RwikqPdqmotJRdacT";
-    private $consumerSecret = "Yh25mmLfi8u8B9dTXS6IJOtWiXMb8mchnGoYuAbrCO4jHxiMeL";     
+    private $consumerKey = "TLAlw9Kk7zJ6uwsI4MmGjUdwb";
+    private $consumerSecret = "29LVVNVhYFPwSbEXtIvvqWdN1Nv48pjpxAlE2MlzOQSrzkowOq";     
 
     public function index()
     {
