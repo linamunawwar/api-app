@@ -278,24 +278,24 @@ return [
                 ],
             ],
         ],
-        [
-            'text'    => 'API Instagram',
-            'icon'    => 'fab fa-instagram',
-            'submenu' => [
-                [
-                    'text' => 'User Info',
-                    'url'  => 'instagram',
-                ],
-                [
-                    'text'    => 'Hashtag Search',
-                    'url'     => 'instagram/hashtag',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
+        // [
+        //     'text'    => 'API Instagram',
+        //     'icon'    => 'fab fa-instagram',
+        //     'submenu' => [
+        //         [
+        //             'text' => 'User Info',
+        //             'url'  => 'instagram',
+        //         ],
+        //         [
+        //             'text'    => 'Hashtag Search',
+        //             'url'     => 'instagram/hashtag',
+        //         ],
+        //         [
+        //             'text' => 'level_one',
+        //             'url'  => '#',
+        //         ],
+        //     ],
+        // ],
         [
             'text'    => 'API Google',
             'icon'    => 'fab fa-google',
