@@ -79,8 +79,8 @@
             var notif = $('#notif').val();
 
             if(notif == 0){
-                alert("Anda Perlu Login Menggunakan Twitter, Silahkan Logout Terlebih Dahulu !!");
-                document.location.href = 'home';
+                alert("Untuk Mengakses Twitter, Anda Perlu Login Terlebih Dahulu!!");
+                document.location.href = 'media/twitter';
             }
         });
 
