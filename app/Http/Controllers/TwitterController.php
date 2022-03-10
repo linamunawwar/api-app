@@ -186,14 +186,7 @@ class TwitterController extends Controller
 
     public function user_tweet()
     {
-        $notif = 1;
-        $user = User::where('id', \Auth::user()->id)->first();
-        $socialAuth = SocialAuth::where('user_id', $user->id)->first();
-        if ($socialAuth == null) {
-            $notif = 0;
-        }
-
-        return view('twitter.userTweet.index', ['notif' => $notif]);
+        return view('twitter.userTweet.index');
     }
 
     public function userTweet(Request $request)
