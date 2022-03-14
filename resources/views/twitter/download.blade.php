@@ -66,12 +66,21 @@ function build_menu($rows, $parent = 0, $vert = 0) {
       <div class="row">
           <div class="col-md-12">
               <div class="card">
+                @if ($response != false)
+                    <div class="card-header">
+                        <button type="button" class="btn btn-info" id="capture"> Export Image </button>
+                    </div>
+                @endif
                 <div class="card-body">
                   <center>
-                    <ul id="tree-data" style="display:none">                            
-                      <?php echo build_menu($response); ?>
-                    </ul>
-                    <div id="tree-view"></div>	
+                    @if ($response != false)
+                        <ul id="tree-data" style="display:none">                            
+                            <?php echo build_menu($response); ?>
+                        </ul>
+                      <div id="tree-view" class="tree-view"></div>
+                    @else
+                        Data Tidak Tersedia
+                    @endif	
                   </center>
                 </div>
               </div>
@@ -85,9 +94,12 @@ function build_menu($rows, $parent = 0, $vert = 0) {
 
 @push('js')
     <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ asset('css/orgchart/orgchart.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         $(document).ready(function () {
+            
             // create a tree
             $("#tree-data").jOrgChart({
                 chartElement: $("#tree-view"),
@@ -100,6 +112,26 @@ function build_menu($rows, $parent = 0, $vert = 0) {
                 $('.jOrgChart .selected').removeClass('selected');
                 node.addClass('selected');
             }
+        });
+
+        $(function(){    
+            
+            //to make a div draggable
+            $('.tree-view').draggable(
+                {containment: "#canvas", scroll: false}
+            );
+            
+            $('#capture').click(function(){
+                //get the div content
+                html2canvas(document.getElementById("tree-view")).then(function(canvas) {                    
+                    var anchorTag = document.createElement("a");
+                    document.body.appendChild(anchorTag);
+                    anchorTag.download = "diagram.jpg";
+                    anchorTag.href = canvas.toDataURL();
+                    anchorTag.target = '_blank';
+                    anchorTag.click();
+                });
+            });            
         });
     </script>
 @endpush
