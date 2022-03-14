@@ -156,27 +156,35 @@ class TwitterController extends Controller
     {
         $data = self::show_tweet($id); 
 
-        $twitter = SocialAuth::query()->first();
-        $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
-        $push->setTimeouts(10, 15);
-        $push->ssl_verifypeer = true;
-        $push->get('statuses/retweets', [
-            'id' => $data->original->retweeted_status->id_str,
-            "count" => "100"
-        ]);  
+        if (isset($data->original->retweeted_status) != false) {
+            $twitter = SocialAuth::query()->first();
+            $push = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $twitter->twitter_oauth_token, $twitter->twitter_oauth_token_secrete);
+            $push->setTimeouts(10, 15);
+            $push->ssl_verifypeer = true;
+            $push->get('statuses/retweets', [
+                'id' => $data->original->retweeted_status->id_str,
+                "count" => "100"
+            ]);  
 
-        $response = response()->json($push->getLastBody());
-        $response = $response->original;
+            $response = response()->json($push->getLastBody());
+            $response = $response->original;
 
-        usort($response, function($a, $b) {
-            return strtotime($a->retweeted_status->created_at) - strtotime($b->retweeted_status->created_at);
-        });
+            // dd($response);
+            usort($response, function($a, $b) {
+                return strtotime($a->retweeted_status->created_at) - strtotime($b->retweeted_status->created_at);
+            });
 
-        $data = self::show_tweet($data->original->retweeted_status->id_str);
-        $response = self::combineData($response, $data);
+            $data = self::show_tweet($data->original->retweeted_status->id_str);
+            $response = self::combineData($response, $data);
+
+            
+        } else {
+            $response = false;
+        }
         
-        // dd($response);
         return view('twitter.download', ["response" => $response]);
+        // dd($response);
+        
         
         // $pdf = PDF::loadview('twitter.download', ["response" => $response])
         //         ->setPaper('a4', 'potrait');
