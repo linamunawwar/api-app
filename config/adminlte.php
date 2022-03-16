@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>UltimaSoft</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -265,7 +265,7 @@ return [
         //     'icon' => 'fas fa-fw fa-lock',
         // ],
         [
-            'text'    => 'API Twitter',
+            'text'    => 'Twitter',
             'icon'    => 'fab fa-twitter',
             'submenu' => [
                 [
@@ -297,7 +297,7 @@ return [
         //     ],
         // ],
         [
-            'text'    => 'API Google',
+            'text'    => 'Google',
             'icon'    => 'fab fa-google',
             'url'     => '/google',
         ],
